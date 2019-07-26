@@ -15,24 +15,14 @@ import com.example.walklist.views.adapters.WalkListAdapter
 
 import com.example.walklist.dummy.DummyContent
 
-/**
- * A fragment representing a list of Walks.
- * Activities containing this fragment MUST implement the
- * [WalkListFragment.ListInteractionListener] interface.
- */
 class WalkListFragment : Fragment() {
-
-    // TODO: Customize parameters
-    private var columnCount = 1
 
     private var listener: ListInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
+        arguments?.let {}
     }
 
     override fun onCreateView(
@@ -44,10 +34,7 @@ class WalkListFragment : Fragment() {
         // Set the adapter
         if (view is androidx.recyclerview.widget.RecyclerView) {
             with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> androidx.recyclerview.widget.LinearLayoutManager(context)
-                    else -> androidx.recyclerview.widget.GridLayoutManager(context, columnCount)
-                }
+                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
                 adapter = WalkListAdapter(DummyContent.ITEMS, listener)
             }
         }
@@ -68,33 +55,7 @@ class WalkListFragment : Fragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson
-     * [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
     interface ListInteractionListener {
-        fun onWalkClicked(item: Walk)
-    }
-
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            WalkListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
+        fun onWalkClicked(walk: Walk)
     }
 }

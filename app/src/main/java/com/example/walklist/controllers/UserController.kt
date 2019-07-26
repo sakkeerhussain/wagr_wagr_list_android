@@ -48,9 +48,9 @@ object UserController {
             })
     }
 
-    fun register(email: String, firstName: String, password: String, activity: BaseActivity) {
+    fun register(email: String, name: String, password: String, activity: BaseActivity) {
 
-        val user = User(email = email, password = password, firstName = firstName, lastName = "")
+        val user = User(email = email, password = password, name = name)
 
         val pDialog = ProgressDialog.show(activity, "Loading...",
             "Attempting to register")
@@ -82,7 +82,7 @@ object UserController {
 
     fun logout(context: Context) {
         storeToken("", context)
-        storeUser(User("", "", "", ""), context)
+        storeUser(User("", "", ""), context)
         val intent = Intent(context, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(intent)

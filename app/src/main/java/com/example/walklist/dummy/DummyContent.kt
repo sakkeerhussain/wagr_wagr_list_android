@@ -38,6 +38,7 @@ object DummyContent {
 
     private fun createDummyItem(position: Int): Walk {
         return Walk(
+            position,
             "Evening Walk - $position",
             "$position KM : 54 mins",
             makeDetails(position)
