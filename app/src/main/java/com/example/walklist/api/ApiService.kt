@@ -13,6 +13,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 
@@ -26,8 +27,8 @@ object ApiService {
         @POST("register")
         fun register(@Body user: User): Call<LoginRespModel>
 
-//        @GET("user/profile/")
-//        fun profile(): Call<DriverRespModel>
+        @GET("walks")
+        fun getWalks(): Call<WalksRespModel>
 //
 //        @PUT("user/location/")
 //        fun updateUserLocation(@Body body: GpsPosition): Call<DriverRespModel>
@@ -84,7 +85,7 @@ object ApiService {
                         .addHeader("Content-Type", "application/json")
                         .addHeader("Accept", "application/json")
                 if (mTokenInService != "") {
-                    builder.addHeader("Authorization", "Token $mTokenInService")
+                    builder.addHeader("Authorization", "Bearer $mTokenInService")
                 }
 
                 return chain.proceed(builder.build())

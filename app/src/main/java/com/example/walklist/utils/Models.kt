@@ -10,5 +10,4 @@ data class Walk(val id: Int, val title: String, val content: String, val details
 }
 
 
-
 class User(val email: String, val password: String, val name: String?)

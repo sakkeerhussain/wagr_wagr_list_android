@@ -1,6 +1,7 @@
 package com.example.walklist.api
 
 import com.example.walklist.utils.User
+import com.example.walklist.utils.Walk
 
 open class BaseRespModel(val status: String, val message: String)
 //open class BaseNotiModel(val type: String, val badge: Int)
@@ -9,9 +10,9 @@ open class BaseRespModel(val status: String, val message: String)
 class LoginRespModel(val data: LoginResp): BaseRespModel("", "")
 
 class LoginResp(val token: String, val user: User)
+class WalksRespModel(val data: List<Walk>): BaseRespModel("", "")
 
 //class DriverRespModel(val data: Driver): BaseRespModel("", "")
-//class DriversRespModel(val data: List<Driver>): BaseRespModel("", "")
 //class VehicleModelsRespModel(val data: List<VehicleModel>): BaseRespModel("", "")
 //
 //class FcmTokenRespModel(val data: FcmToken): BaseRespModel("", "")

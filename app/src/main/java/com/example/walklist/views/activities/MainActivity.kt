@@ -15,6 +15,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListener {
 
+    override var listFragment: WalkListFragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,6 +39,10 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
         return when (item.itemId) {
             R.id.ic_logout -> {
                 UserController.logout(this)
+                true
+            }
+            R.id.ic_refresh -> {
+                listFragment?.refreshWalks()
                 true
             }
             else -> super.onOptionsItemSelected(item)
