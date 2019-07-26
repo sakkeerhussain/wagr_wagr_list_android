@@ -16,11 +16,9 @@ import kotlinx.android.synthetic.main.list_item_walk.view.*
  * [RecyclerView.Adapter] that can display a [Walk] and makes a call to the
  * specified [ListInteractionListener].
  */
-class WalkListAdapter(
-    private val mValues: List<Walk>,
-    private val mListener: ListInteractionListener?
-) : androidx.recyclerview.widget.RecyclerView.Adapter<WalkListAdapter.ViewHolder>() {
+class WalkListAdapter(private val mListener: ListInteractionListener?) : RecyclerView.Adapter<WalkListAdapter.ViewHolder>() {
 
+    private var mWalks: List<Walk> = listOf()
     private val mOnClickListener: View.OnClickListener
 
     init {
@@ -40,12 +38,17 @@ class WalkListAdapter(
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = mValues.size
+    override fun getItemCount(): Int = mWalks.size
 
-    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
+    fun setData(walks: List<Walk>) {
+        mWalks = walks
+        notifyDataSetChanged()
+    }
+
+    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
 
         fun bind(position: Int) {
-            val item = mValues.get(position)
+            val item = mWalks.get(position)
             this.mView.title.text = item.title
             this.mView.description.text = item.content
 

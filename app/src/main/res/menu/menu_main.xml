@@ -5,4 +5,8 @@
           android:icon="@android:drawable/ic_lock_lock"
           android:title="@string/logout" />
 
+    <item android:id="@+id/ic_refresh"
+          android:icon="@android:drawable/ic_lock_lock"
+          android:title="@string/refresh" />
+
 </menu>
