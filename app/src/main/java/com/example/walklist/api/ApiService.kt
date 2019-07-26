@@ -1,4 +1,4 @@
-package com.grabclone.driver.api
+package com.example.walklist.api
 
 import android.content.Context
 import com.example.walklist.BuildConfig
@@ -12,17 +12,18 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 
 object ApiService {
 
     interface RetrofitService {
 
-        @POST("user/login/")
+        @POST("login")
         fun login(@Body cred: LoginReqModel): Call<LoginRespModel>
 
-        @POST("user/register/")
+        @POST("register")
         fun register(@Body user: User): Call<LoginRespModel>
 
 //        @GET("user/profile/")
@@ -81,6 +82,7 @@ object ApiService {
 
                 val builder = request.newBuilder()
                         .addHeader("Content-Type", "application/json")
+                        .addHeader("Accept", "application/json")
                 if (mTokenInService != "") {
                     builder.addHeader("Authorization", "Token $mTokenInService")
                 }

@@ -14,7 +14,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        Timer().schedule(500) {
+        Timer().schedule(2000) {
 
             var intent = Intent(this@SplashActivity, LoginActivity::class.java)
             if (UserController.isLoggedIn(this@SplashActivity)) { // Update with is logged in
