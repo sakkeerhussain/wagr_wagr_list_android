@@ -8,7 +8,7 @@ import com.example.walklist.utils.Walk
 import com.example.walklist.views.fragments.WalkListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), WalkListFragment.ListInteractionListener {
+class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

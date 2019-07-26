@@ -24,9 +24,9 @@ class LoginActivity : BaseActivity(false) {
     }
 
     private fun attemptLogin() {
-        val mobile = etEmail.text.toString()
+        val email = etEmail.text.toString()
         val password = etPassword.text.toString()
-        UserController.login(mobile, password, this)
+        UserController.login(email, password, this)
     }
 
     private fun isInvalidEntriesInForm(): Boolean {

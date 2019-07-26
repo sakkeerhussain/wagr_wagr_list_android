@@ -2,7 +2,6 @@ package com.example.walklist.api
 
 import android.content.Context
 import com.example.walklist.controllers.UserController
-import com.grabclone.driver.api.BaseRespModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
