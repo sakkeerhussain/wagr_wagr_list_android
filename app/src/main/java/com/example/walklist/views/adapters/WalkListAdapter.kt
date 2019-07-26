@@ -25,8 +25,8 @@ class WalkListAdapter(
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as Walk
-            mListener?.onWalkClicked(item)
+            val walk = v.tag as Walk
+            mListener?.onWalkClicked(walk)
         }
     }
 

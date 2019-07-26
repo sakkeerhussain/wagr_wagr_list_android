@@ -1,5 +1,6 @@
 package com.example.walklist.views.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -42,7 +43,9 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
         }
     }
 
-    override fun onWalkClicked(item: Walk) {
-
+    override fun onWalkClicked(walk: Walk) {
+        val intent = Intent(this, WalkActivity::class.java)
+        intent.putExtra(WalkActivity.WALK_ID, walk.id)
+        startActivity(intent)
     }
 }
