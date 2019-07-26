@@ -1,8 +1,8 @@
 package com.example.walklist.views.activities
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import com.example.walklist.R
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.fragments.WalkListFragment
