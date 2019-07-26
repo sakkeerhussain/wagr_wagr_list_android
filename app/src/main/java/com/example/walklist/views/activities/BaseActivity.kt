@@ -5,8 +5,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.example.walklist.controllers.MyLocationController
 import com.example.walklist.controllers.SharedPrefController
 import com.example.walklist.utils.Const
+import com.google.android.gms.location.LocationSettingsStates
 
 open class BaseActivity(val mLoginRequired: Boolean) : AppCompatActivity() {
 
@@ -47,7 +49,7 @@ open class BaseActivity(val mLoginRequired: Boolean) : AppCompatActivity() {
 
                 if ((grantResults.isNotEmpty() && grantResults[0]
                                 == PackageManager.PERMISSION_GRANTED)) {
-                    MyLocationManager.startLocationChangeNotification(this)
+                    MyLocationController.startLocationChangeNotification(this)
                 } else {
                     Toast.makeText(this, "Unable to get your location", Toast.LENGTH_LONG).show()
                 }
@@ -61,7 +63,7 @@ open class BaseActivity(val mLoginRequired: Boolean) : AppCompatActivity() {
             Const.GPS_SETTINGS_ENABLE_REQUEST -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-                        MyLocationManager.startLocationChangeNotification(this)
+                        MyLocationController.startLocationChangeNotification(this)
                     }
 
                     Activity.RESULT_CANCELED -> {

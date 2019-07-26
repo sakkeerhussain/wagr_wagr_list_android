@@ -2,8 +2,8 @@ package com.example.walklist.views.activities
 
 import android.content.Intent
 import android.os.Bundle
-import com.grabclone.driver.R
-import com.grabclone.driver.managers.UserManager
+import com.example.walklist.R
+import com.example.walklist.controllers.UserController
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity(false) {
@@ -24,15 +24,15 @@ class LoginActivity : BaseActivity(false) {
     }
 
     private fun attemptLogin() {
-        val mobile = etMobile.text.toString()
+        val mobile = etEmail.text.toString()
         val password = etPassword.text.toString()
-        UserManager.login(mobile, password, this)
+        UserController.login(mobile, password, this)
     }
 
     private fun isInvalidEntriesInForm(): Boolean {
         var result = false
-        if (etMobile.text!!.toString() == "") {
-            etMobile.error = "Empty mobile number is not allowed"
+        if (etEmail.text!!.toString() == "") {
+            etEmail.error = "Empty email is not allowed"
             result = true
         }
         if (etPassword.text!!.toString() == "") {

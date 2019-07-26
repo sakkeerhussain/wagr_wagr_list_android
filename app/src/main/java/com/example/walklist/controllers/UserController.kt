@@ -4,7 +4,16 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import com.example.walklist.api.BaseApiCallback
 import com.example.walklist.utils.Const
+import com.example.walklist.utils.User
+import com.example.walklist.views.activities.BaseActivity
+import com.example.walklist.views.activities.LoginActivity
+import com.example.walklist.views.activities.MainActivity
+import com.grabclone.driver.api.ApiService
+import com.grabclone.driver.api.LoginReqModel
+import com.grabclone.driver.api.LoginResp
+import com.grabclone.driver.api.LoginRespModel
 
 object UserController {
 
@@ -16,9 +25,9 @@ object UserController {
         SharedPrefController.store(Const.SharedPref.TOKEN, token, context)
     }
 
-    private fun storeUser(user: User, activity: BaseActivity) {
-        SharedPrefController.store(Const.SharedPref.USER, user, activity)
-    }
+//    private fun storeUser(user: User, activity: BaseActivity) {
+//        SharedPrefController.store(Const.SharedPref.USER, user, activity)
+//    }
 
     fun getToken(context: Context): String {
         val token = SharedPrefController.get(Const.SharedPref.TOKEN, "", context)
@@ -43,14 +52,13 @@ object UserController {
             })
     }
 
-    fun register(mobile: String, firstName: String, password: String, activity: BaseActivity) {
+    fun register(email: String, firstName: String, password: String, activity: BaseActivity) {
 
-        val account = Account(mobile = mobile, type = "", email = "", password = password,
-            firstName = firstName, lastName = "", contactNo = "")
+        val user = User(email = email, password = password, firstName = firstName, lastName = "")
 
         val pDialog = ProgressDialog.show(activity, "Loading...",
             "Attempting to register")
-        ApiService.getService(activity).register(User(account))
+        ApiService.getService(activity).register(user)
             .enqueue(object : BaseApiCallback<LoginRespModel>(activity) {
 
                 override fun onSuccess(result: LoginRespModel) {
@@ -69,13 +77,11 @@ object UserController {
 
     private fun handleSuccessfulLogin(data: LoginResp, activity: BaseActivity) {
         storeToken(data.token, activity)
-        storeUser(data.user, activity)
+//        storeUser(data.user, activity)
 
-        val intent = Intent(activity, HomeActivity::class.java)
+        val intent = Intent(activity, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(intent)
-
-        MyNotificationManager.generateNotificationToken(activity)
     }
 
     fun logout(context: Context) {
