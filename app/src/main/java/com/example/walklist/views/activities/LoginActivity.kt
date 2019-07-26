@@ -2,6 +2,7 @@ package com.example.walklist.views.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import com.example.walklist.R
 import com.example.walklist.controllers.UserController
 import kotlinx.android.synthetic.main.activity_login.*
@@ -20,6 +21,10 @@ class LoginActivity : BaseActivity(false) {
 
         btRegister.setOnClickListener {
             startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+        }
+
+        btGoogleAuth.setOnClickListener {
+            Toast.makeText(this, "Sorry, not yet implemented", Toast.LENGTH_SHORT).show()
         }
     }
 
