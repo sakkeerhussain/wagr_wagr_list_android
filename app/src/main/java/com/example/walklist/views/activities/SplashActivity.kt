@@ -1,7 +1,7 @@
 package com.example.walklist.views.activities
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.walklist.R
 import com.example.walklist.controllers.UserController

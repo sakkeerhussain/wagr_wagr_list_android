@@ -3,7 +3,7 @@ package com.example.walklist.views.activities
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.example.walklist.controllers.MyLocationController
 import com.example.walklist.controllers.SharedPrefController

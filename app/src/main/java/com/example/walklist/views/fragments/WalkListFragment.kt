@@ -2,10 +2,10 @@ package com.example.walklist.views.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,11 +42,11 @@ class WalkListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_walk_list, container, false)
 
         // Set the adapter
-        if (view is RecyclerView) {
+        if (view is androidx.recyclerview.widget.RecyclerView) {
             with(view) {
                 layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
+                    columnCount <= 1 -> androidx.recyclerview.widget.LinearLayoutManager(context)
+                    else -> androidx.recyclerview.widget.GridLayoutManager(context, columnCount)
                 }
                 adapter = WalkListAdapter(DummyContent.ITEMS, listener)
             }

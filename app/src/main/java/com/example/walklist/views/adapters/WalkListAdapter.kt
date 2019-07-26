@@ -1,6 +1,6 @@
 package com.example.walklist.views.adapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.list_item_walk.view.*
 class WalkListAdapter(
     private val mValues: List<Walk>,
     private val mListener: ListInteractionListener?
-) : RecyclerView.Adapter<WalkListAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<WalkListAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
 
@@ -42,7 +42,7 @@ class WalkListAdapter(
 
     override fun getItemCount(): Int = mValues.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
 
         fun bind(position: Int) {
             val item = mValues.get(position)
