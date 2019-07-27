@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import com.example.walklist.R
 import com.example.walklist.controllers.WalkController
 import kotlinx.android.synthetic.main.fragment_current_walk.view.*
-import kotlinx.android.synthetic.main.list_item_walk.view.*
 
 class CurrentWalkFragment : Fragment() {
 
