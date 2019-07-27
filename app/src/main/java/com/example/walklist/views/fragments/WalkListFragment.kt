@@ -50,6 +50,8 @@ class WalkListFragment : Fragment() {
 
     fun refreshWalks() {
         WalkController.getWalks(context!!, object : WalkController.WalkListener {
+            override fun create(walk: Walk) {}
+
             override fun list(walks: List<Walk>) {
                 // Updating empty message
                 mView.tvEmptyMsg.visibility = if (walks.isEmpty()) View.VISIBLE else View.GONE

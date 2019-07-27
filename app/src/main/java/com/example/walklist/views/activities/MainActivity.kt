@@ -42,7 +42,7 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
     private fun setListeners() {
 
         fab.setOnClickListener { view ->
-            val walk = Walk(0, "Test walk", null, null)
+            val walk = Walk("Test walk", 11.1111, 71.1111)
             WalkController.createWalk(walk, this, null)
         }
     }
