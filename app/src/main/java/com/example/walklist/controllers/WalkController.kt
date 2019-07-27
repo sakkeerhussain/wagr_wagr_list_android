@@ -11,6 +11,9 @@ import com.example.walklist.utils.Walk
 
 object WalkController: BaseController() {
 
+    const val DATA_TYPE_WALK_LIST = 1
+    const val DATA_TYPE_ACTIVE_WALK = 2
+
     private var mActiveWalk: Walk? = null
     private var mWalks = listOf<Walk>()
 
@@ -37,7 +40,7 @@ object WalkController: BaseController() {
             override fun onSuccess(result: WalksRespModel) {
                 pDialog.dismiss()
                 mWalks = result.data
-                notifyAllListeners()
+                notifyAllListeners(DATA_TYPE_WALK_LIST)
             }
 
             override fun onError(message: String) {
@@ -55,7 +58,7 @@ object WalkController: BaseController() {
             override fun onSuccess(result: WalkRespModel) {
                 pDialog.dismiss()
                 mActiveWalk = result.data
-                notifyAllListeners()
+                notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
             }
 
             override fun onError(message: String) {
@@ -70,17 +73,39 @@ object WalkController: BaseController() {
         ApiService.getService(context).createWalk(walk)
             .enqueue(object : BaseApiCallback<WalkRespModel>(context) {
 
-            override fun onSuccess(result: WalkRespModel) {
-                pDialog.dismiss()
-                mActiveWalk = result.data
-                notifyAllListeners()
-            }
+                override fun onSuccess(result: WalkRespModel) {
+                    pDialog.dismiss()
+                    mActiveWalk = result.data
+                    notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
+                }
 
-            override fun onError(message: String) {
-                pDialog.dismiss()
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            }
+                override fun onError(message: String) {
+                    pDialog.dismiss()
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
 
-        })
+            })
+    }
+
+    fun endCurrentWalk(context: Context) {
+        val walk = mActiveWalk ?: return
+        val pDialog = ProgressDialog.show(context, "Loading...", "Ending your walk")
+        ApiService.getService(context).endWalk(walk.id!!, walk)
+            .enqueue(object : BaseApiCallback<WalkRespModel>(context) {
+
+                override fun onSuccess(result: WalkRespModel) {
+                    pDialog.dismiss()
+                    mActiveWalk = null
+                    notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
+                    refreshWalksFromRemote(context)
+                    refreshActiveWalkFromRemote(context)
+                }
+
+                override fun onError(message: String) {
+                    pDialog.dismiss()
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
+
+            })
     }
 }

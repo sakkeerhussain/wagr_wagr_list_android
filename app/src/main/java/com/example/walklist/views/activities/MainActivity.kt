@@ -74,6 +74,7 @@ class MainActivity : BaseActivity(true), BaseController.Listener, WalkListFragme
             }
             R.id.ic_refresh -> {
                 WalkController.refreshWalksFromRemote(this)
+                WalkController.refreshActiveWalkFromRemote(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -86,11 +87,14 @@ class MainActivity : BaseActivity(true), BaseController.Listener, WalkListFragme
         startActivity(intent)
     }
 
-    override fun dataChanged(sender: BaseController) {
+    override fun dataChanged(sender: BaseController, type: Int) {
         runOnUiThread {
             if (sender is WalkController) {
-                setupNewWalkButton()
-                listFragment?.refreshWalks()
+                if (sender.isOfType(type, WalkController.DATA_TYPE_WALK_LIST)) {
+                    listFragment?.refreshWalks()
+                } else {
+                    setupNewWalkButton()
+                }
             }
         }
     }

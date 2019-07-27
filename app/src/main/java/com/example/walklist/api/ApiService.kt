@@ -16,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
 object ApiService {
@@ -37,31 +38,8 @@ object ApiService {
         @POST("walks")
         fun createWalk(@Body body: Walk): Call<WalkRespModel>
 
-//        @GET("user/nearby_drivers/")
-//        fun getNearbyDrivers(@Query("pos_lat") lat: Double,
-//                             @Query("pos_long") long: Double,
-//                             @Query("max_distance") distance: Float): Call<DriversRespModel>
-//
-//        @PUT("profile/fcm_token/")
-//        fun updateFcmToken(@Body body: FcmToken): Call<FcmTokenRespModel>
-//
-//        @GET("driver/ride_request/{id}/")
-//        fun getRideRequest(@Path("id") id: Int): Call<RideReqRespModel>
-//
-//        @GET("driver/ride_decline/{id}/")
-//        fun declineRide(@Path("id") id: Int): Call<RideReqRespModel>
-//
-//        @GET("driver/ride_accept/{id}/")
-//        fun acceptRide(@Path("id") id: Int): Call<RideRespModel>
-//
-//        @POST("driver/ride_update/{id}/")
-//        fun updateRide(@Path("id") id: Int, @Body location: GpsPosition): Call<RideRespModel>
-//
-//        @GET("driver/ride_start/{id}/")
-//        fun startRide(@Path("id") id: Int): Call<RideRespModel>
-//
-//        @GET("driver/ride_stop/{id}/")
-//        fun stopRide(@Path("id") id: Int): Call<RideRespModel>
+        @POST("walks/{id}/end")
+        fun endWalk(@Path("id") id: Int, @Body body: Walk): Call<WalkRespModel>
     }
 
     private var mService: RetrofitService? = null
