@@ -40,8 +40,8 @@ object DummyContent {
         return Walk(
             position,
             "Evening Walk - $position",
-            "$position KM : 54 mins",
-            makeDetails(position)
+            54.0,
+            12.0
         )
     }
 

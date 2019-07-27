@@ -20,6 +20,14 @@ object WalkController {
         return mActiveWalk != null
     }
 
+    fun isReadyForWalking(): Boolean {
+        return mActiveWalk == null
+    }
+
+    fun getActiveWalk(): Walk? {
+        return mActiveWalk
+    }
+
     fun getWalks(context: Context, listener: WalkListener) {
         val pDialog = ProgressDialog.show(context, "Loading...", "Fetching walk history")
         ApiService.getService(context).getWalks().enqueue(object : BaseApiCallback<WalksRespModel>(context) {

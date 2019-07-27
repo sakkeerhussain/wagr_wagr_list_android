@@ -50,7 +50,7 @@
                     android:layout_toEndOf="@+id/profileImage">
 
                 <TextView
-                        android:id="@+id/title"
+                        android:id="@+id/tvTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="24sp"
