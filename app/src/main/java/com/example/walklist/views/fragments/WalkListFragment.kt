@@ -14,7 +14,6 @@ import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.adapters.WalkListAdapter
 
-import com.example.walklist.dummy.DummyContent
 import kotlinx.android.synthetic.main.fragment_walk_list.view.*
 
 class WalkListFragment : Fragment() {
