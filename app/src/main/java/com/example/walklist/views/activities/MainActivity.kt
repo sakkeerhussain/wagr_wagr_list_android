@@ -8,13 +8,14 @@ import android.view.MenuItem
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.walklist.R
+import com.example.walklist.controllers.BaseController
 import com.example.walklist.controllers.UserController
 import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.fragments.WalkListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListener {
+class MainActivity : BaseActivity(true), BaseController.Listener, WalkListFragment.ListInteractionListener {
 
     override var listFragment: WalkListFragment? = null
 
@@ -26,6 +27,17 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
         setupViews()
         setListeners()
     }
+
+    override fun onResume() {
+        super.onResume()
+        WalkController.addListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        WalkController.removeListener(this)
+    }
+
 
     private fun setupViews() {
         setupNewWalkButton()
@@ -43,7 +55,7 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
 
         fab.setOnClickListener { view ->
             val walk = Walk("Test walk", 11.1111, 71.1111)
-            WalkController.createWalk(walk, this, null)
+            WalkController.createWalk(walk, this)
         }
     }
 
@@ -61,7 +73,7 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
                 true
             }
             R.id.ic_refresh -> {
-                listFragment?.refreshWalks()
+                WalkController.refreshWalksFromRemote(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -73,4 +85,14 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
         intent.putExtra(WalkActivity.WALK_ID, walk.id)
         startActivity(intent)
     }
+
+    override fun dataChanged(sender: BaseController) {
+        runOnUiThread {
+            if (sender is WalkController) {
+                setupNewWalkButton()
+                listFragment?.refreshWalks()
+            }
+        }
+    }
+
 }

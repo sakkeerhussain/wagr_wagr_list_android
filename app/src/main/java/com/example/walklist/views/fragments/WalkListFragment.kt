@@ -3,9 +3,6 @@ package com.example.walklist.views.fragments
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +11,6 @@ import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.adapters.WalkListAdapter
 
-import com.example.walklist.dummy.DummyContent
 import kotlinx.android.synthetic.main.fragment_walk_list.view.*
 
 class WalkListFragment : Fragment() {
@@ -38,28 +34,22 @@ class WalkListFragment : Fragment() {
         this.mView = view
 
         // Set the adapter
-            with(mView.rvList) {
-                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-                adapter = adapter
-            }
+        with(mView.rvList) {
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+            adapter = adapter
+        }
 
-        refreshWalks()
-
+        WalkController.refreshWalksFromRemote(view.context)
         return view
     }
 
     fun refreshWalks() {
-        WalkController.getWalks(context!!, object : WalkController.WalkListener {
-            override fun create(walk: Walk) {}
+        val walks = WalkController.getWalks()
+        // Updating empty message
+        mView.tvEmptyMsg.visibility = if (walks.isEmpty()) View.VISIBLE else View.GONE
 
-            override fun list(walks: List<Walk>) {
-                // Updating empty message
-                mView.tvEmptyMsg.visibility = if (walks.isEmpty()) View.VISIBLE else View.GONE
-
-                // Updating data
-                mWalksAdapter.setData(walks)
-            }
-        })
+        // Updating data
+        mWalksAdapter.setData(walks)
     }
 
     override fun onAttach(context: Context) {

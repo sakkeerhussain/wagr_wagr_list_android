@@ -31,6 +31,9 @@ object ApiService {
         @GET("walks")
         fun getWalks(): Call<WalksRespModel>
 
+        @GET("walks/active")
+        fun getActiveWalk(): Call<WalkRespModel>
+
         @POST("walks")
         fun createWalk(@Body body: Walk): Call<WalkRespModel>
 
