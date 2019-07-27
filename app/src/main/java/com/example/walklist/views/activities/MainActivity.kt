@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.walklist.R
 import com.example.walklist.controllers.UserController
+import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.fragments.WalkListFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,8 +24,8 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            val walk = Walk(0, "Test walk")
+            WalkController.createWalk(walk, this, null)
         }
     }
 
