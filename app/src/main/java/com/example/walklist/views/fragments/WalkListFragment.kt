@@ -2,15 +2,15 @@ package com.example.walklist.views.fragments
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.walklist.R
 import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.adapters.WalkListAdapter
-
 import kotlinx.android.synthetic.main.fragment_walk_list.view.*
 
 class WalkListFragment : Fragment() {
@@ -35,9 +35,11 @@ class WalkListFragment : Fragment() {
 
         // Set the adapter
         with(mView.rvList) {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-            adapter = adapter
+            layoutManager = LinearLayoutManager(context)
+            adapter = mWalksAdapter
         }
+
+        refreshWalks()
 
         WalkController.refreshWalksFromRemote(view.context)
         return view
