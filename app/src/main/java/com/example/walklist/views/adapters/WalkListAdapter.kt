@@ -1,15 +1,13 @@
 package com.example.walklist.views.adapters
 
-import androidx.recyclerview.widget.RecyclerView
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.example.walklist.R
-
-
-import com.example.walklist.views.fragments.WalkListFragment.ListInteractionListener
 import com.example.walklist.utils.Walk
-
+import com.example.walklist.views.fragments.WalkListFragment.ListInteractionListener
 import kotlinx.android.synthetic.main.list_item_walk.view.*
 
 /**
@@ -38,7 +36,9 @@ class WalkListAdapter(private val mListener: ListInteractionListener?) : Recycle
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = mWalks.size
+    override fun getItemCount(): Int {
+        return mWalks.size
+    }
 
     fun setData(walks: List<Walk>) {
         mWalks = walks
@@ -48,7 +48,7 @@ class WalkListAdapter(private val mListener: ListInteractionListener?) : Recycle
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
 
         fun bind(position: Int) {
-            val item = mWalks.get(position)
+            val item = mWalks[position]
             this.mView.tvTitle.text = item.title
             this.mView.description.text = item.description()
 
