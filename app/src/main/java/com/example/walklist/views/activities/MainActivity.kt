@@ -23,8 +23,26 @@ class MainActivity : BaseActivity(true), WalkListFragment.ListInteractionListene
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        setupViews()
+        setListeners()
+    }
+
+    private fun setupViews() {
+        setupNewWalkButton()
+    }
+
+    private fun setupNewWalkButton() {
+        if (WalkController.isReadyForWalking()) {
+            fab.show()
+        } else {
+            fab.hide()
+        }
+    }
+
+    private fun setListeners() {
+
         fab.setOnClickListener { view ->
-            val walk = Walk(0, "Test walk")
+            val walk = Walk(0, "Test walk", null, null)
             WalkController.createWalk(walk, this, null)
         }
     }

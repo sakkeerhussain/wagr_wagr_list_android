@@ -49,8 +49,8 @@ class WalkListAdapter(private val mListener: ListInteractionListener?) : Recycle
 
         fun bind(position: Int) {
             val item = mWalks.get(position)
-            this.mView.title.text = item.title
-            this.mView.description.text = item.content
+            this.mView.tvTitle.text = item.title
+            this.mView.description.text = item.description()
 
             with(mView) {
                 tag = item
