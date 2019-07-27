@@ -8,9 +8,10 @@ open class BaseRespModel(val status: String, val message: String)
 
 // API response models
 class LoginRespModel(val data: LoginResp): BaseRespModel("", "")
-
 class LoginResp(val token: String, val user: User)
+
 class WalksRespModel(val data: List<Walk>): BaseRespModel("", "")
+class WalkRespModel(val data: Walk): BaseRespModel("", "")
 
 //class DriverRespModel(val data: Driver): BaseRespModel("", "")
 //class VehicleModelsRespModel(val data: List<VehicleModel>): BaseRespModel("", "")

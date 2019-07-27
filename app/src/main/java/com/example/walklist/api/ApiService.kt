@@ -5,6 +5,7 @@ import com.example.walklist.BuildConfig
 import com.example.walklist.controllers.UserController
 import com.example.walklist.utils.Const
 import com.example.walklist.utils.User
+import com.example.walklist.utils.Walk
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -29,10 +30,10 @@ object ApiService {
 
         @GET("walks")
         fun getWalks(): Call<WalksRespModel>
-//
-//        @PUT("user/location/")
-//        fun updateUserLocation(@Body body: GpsPosition): Call<DriverRespModel>
-//
+
+        @POST("walks")
+        fun createWalk(@Body body: Walk): Call<WalkRespModel>
+
 //        @GET("user/nearby_drivers/")
 //        fun getNearbyDrivers(@Query("pos_lat") lat: Double,
 //                             @Query("pos_long") long: Double,
