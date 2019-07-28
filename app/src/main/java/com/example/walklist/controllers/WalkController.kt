@@ -14,7 +14,7 @@ import com.example.walklist.views.activities.BaseActivity
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
-object WalkController : BaseController() {
+object WalkController : BaseController(), BaseController.Listener {
 
     const val DATA_TYPE_WALK_LIST = 1
     const val DATA_TYPE_ACTIVE_WALK = 2
@@ -84,9 +84,8 @@ object WalkController : BaseController() {
                         pDialog.dismiss()
                         mActiveWalk = result.data
                         notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
-                        MyLocationController.startLocationChangeNotification(activity) {
-
-                        }
+                        MyLocationController.startLocationChangeNotification(activity) {}
+                        MyLocationController.addListener(this@WalkController)
                         success.invoke()
                     }
 
@@ -124,6 +123,9 @@ object WalkController : BaseController() {
                 )
             }
 
+            MyLocationController.addListener(this@WalkController)
+            MyLocationController.stopLocationChangeNotification(activity)
+
             val pDialog = ProgressDialog.show(activity, "Loading...", "Ending your walk")
             ApiService.getService(activity).endWalk(activeWalk.id!!, activeWalk)
                 .enqueue(object : BaseApiCallback<WalkRespModel>(activity) {
@@ -134,7 +136,6 @@ object WalkController : BaseController() {
                         notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
                         refreshWalksFromRemote(activity)
                         refreshActiveWalkFromRemote(activity)
-                        MyLocationController.stopLocationChangeNotification(activity)
                     }
 
                     override fun onError(message: String) {
@@ -168,13 +169,15 @@ object WalkController : BaseController() {
             activeWalk.resumedLat = null
             activeWalk.resumedLong = null
 
+            MyLocationController.removeListener(this)
+            MyLocationController.stopLocationChangeNotification(activity)
+
             val pDialog = ProgressDialog.show(activity, "Loading...", "Updating walk details in remote")
             ApiService.getService(activity).updateWalk(activeWalk.id!!, activeWalk)
                 .enqueue(object : BaseApiCallback<WalkRespModel>(activity) {
 
                     override fun onSuccess(result: WalkRespModel) {
                         pDialog.dismiss()
-                        MyLocationController.stopLocationChangeNotification(activity)
                     }
 
                     override fun onError(message: String) {
@@ -200,6 +203,8 @@ object WalkController : BaseController() {
                 activeWalk.encodedRoute,
                 listOf(LatLng(location.latitude, location.longitude))
             )
+            MyLocationController.addListener(this)
+            MyLocationController.startLocationChangeNotification(activity) {}
 
             val pDialog = ProgressDialog.show(activity, "Loading...", "Updating walk details in remote")
             ApiService.getService(activity).updateWalk(activeWalk.id!!, activeWalk)
@@ -207,7 +212,6 @@ object WalkController : BaseController() {
 
                     override fun onSuccess(result: WalkRespModel) {
                         pDialog.dismiss()
-                        MyLocationController.startLocationChangeNotification(activity) {}
                     }
 
                     override fun onError(message: String) {
@@ -216,6 +220,20 @@ object WalkController : BaseController() {
                     }
 
                 })
+        }
+    }
+
+    override fun dataChanged(sender: BaseController, type: Int) {
+        if (sender is MyLocationController) {
+            if (sender.isOfType(type, BaseController.DATA_TYPE_DEFAULT)) {
+                val activeWalk = mActiveWalk ?: return
+                val location = MyLocationController.getLastLocation() ?: return
+
+                activeWalk.encodedRoute = PolyUtils.append(
+                    activeWalk.encodedRoute,
+                    listOf(LatLng(location.latitude, location.longitude))
+                )
+            }
         }
     }
 }
