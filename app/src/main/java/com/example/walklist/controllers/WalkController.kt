@@ -233,6 +233,7 @@ object WalkController : BaseController(), BaseController.Listener {
                     activeWalk.encodedRoute,
                     listOf(LatLng(location.latitude, location.longitude))
                 )
+                notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
             }
         }
     }
