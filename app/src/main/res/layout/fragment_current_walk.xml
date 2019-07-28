@@ -5,7 +5,8 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -35,7 +36,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:text="Evening Walk"/>
+                            tools:text="Evening Walk"/>
 
                     <LinearLayout
                             android:layout_width="wrap_content"
@@ -53,7 +54,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
-                                android:text="4 KM"/>
+                                tools:text="4 KM"/>
 
                     </LinearLayout>
 
@@ -73,7 +74,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
-                                android:text="50 mins"/>
+                                tools:text="50 mins"/>
 
                     </LinearLayout>
 

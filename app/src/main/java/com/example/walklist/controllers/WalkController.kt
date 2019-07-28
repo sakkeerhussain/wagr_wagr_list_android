@@ -14,16 +14,8 @@ object WalkController: BaseController() {
     const val DATA_TYPE_WALK_LIST = 1
     const val DATA_TYPE_ACTIVE_WALK = 2
 
-    private var mActiveWalk: Walk? = null
-    private var mWalks = listOf<Walk>()
-
-    fun getActiveWalk(): Walk? {
-        return mActiveWalk
-    }
-
-    fun getWalks(): List<Walk> {
-        return mWalks
-    }
+    var mActiveWalk: Walk? = null
+    var mWalks = listOf<Walk>()
 
     fun isWalking(): Boolean {
         return mActiveWalk != null

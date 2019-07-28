@@ -6,6 +6,7 @@ import com.example.walklist.controllers.UserController
 import com.example.walklist.utils.Const
 import com.example.walklist.utils.User
 import com.example.walklist.utils.Walk
+import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -79,11 +80,14 @@ object ApiService {
                 .addInterceptor(headerInterceptor)
                 .build()
 
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
+
         val retrofit = Retrofit.Builder()
                 .baseUrl(Const.BASE_URL)
                 .client(httpClient)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
-        return retrofit.create<RetrofitService>(RetrofitService::class.java)
+        /// 2019-07-27 06:06:30
+        return retrofit.create(RetrofitService::class.java)
     }
 }
