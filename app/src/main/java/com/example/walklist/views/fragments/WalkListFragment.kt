@@ -44,7 +44,7 @@ class WalkListFragment : Fragment() {
     }
 
     fun refreshWalks() {
-        val walks = WalkController.getWalks()
+        val walks = WalkController.mWalks
         // Updating empty message
         mView.tvEmptyMsg.visibility = if (walks.isEmpty()) View.VISIBLE else View.GONE
 
