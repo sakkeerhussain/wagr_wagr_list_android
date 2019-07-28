@@ -13,10 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 
 object ApiService {
@@ -40,6 +37,9 @@ object ApiService {
 
         @POST("walks/{id}/end")
         fun endWalk(@Path("id") id: Int, @Body body: Walk): Call<WalkRespModel>
+
+        @PUT("walks/{id}")
+        fun updateWalk(@Path("id") id: Int, @Body body: Walk): Call<WalkRespModel>
     }
 
     private var mService: RetrofitService? = null

@@ -14,9 +14,9 @@ data class Walk(val id: Int?, val title: String, var distance: Int, var duration
                 @SerializedName("end_at") var endAt: Date?,
                 @SerializedName("end_point_lat") var endPointLat: Double?,
                 @SerializedName("end_point_long") var endPointLong: Double?,
-                @SerializedName("resumed_at") var resumedAt: Date,
-                @SerializedName("resumed_lat") var resumedLat: Double,
-                @SerializedName("resumed_long") var resumedLong: Double,
+                @SerializedName("resumed_at") var resumedAt: Date?,
+                @SerializedName("resumed_lat") var resumedLat: Double?,
+                @SerializedName("resumed_long") var resumedLong: Double?,
                 @SerializedName("encoded_route") var encodedRoute: String) {
 
     constructor(title: String, startPointLat: Double, startPointLong: Double) :
@@ -24,13 +24,19 @@ data class Walk(val id: Int?, val title: String, var distance: Int, var duration
                 Date(), startPointLat, startPointLong, PolyUtils.encode(listOf(LatLng(startPointLat, startPointLong))))
 
     override fun toString(): String = title
+
     fun description(): String = "${distanceStr()} KM, $duration mins"
+
     fun distanceStr(): String {
         return if (distance > 1000) {
             "${String.format("%0.3f", distance / 1000)} KM"
         } else {
             "$distance meters"
         }
+    }
+
+    fun isPaused(): Boolean {
+        return resumedAt == null
     }
 }
 
