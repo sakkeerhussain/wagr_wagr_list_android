@@ -93,7 +93,7 @@ object WalkController: BaseController() {
         activeWalk.endPointLong = currentPointLong
         activeWalk.endAt = Date()
         activeWalk.duration += (activeWalk.resumedAt.time - Date().time) / 1000 % 60
-        activeWalk.distance += MapUtils.distanceBetween(activeWalk.resumedLat, activeWalk.resumedLong, activeWalk.endPointLat!!, activeWalk.endPointLong!!)
+        activeWalk.distance += MapUtils.distanceBetween(activeWalk.resumedLat, activeWalk.resumedLong, activeWalk.endPointLat!!, activeWalk.endPointLong!!).toInt()
         activeWalk.encodedRoute = PolyUtils.append(activeWalk.encodedRoute, listOf(LatLng(activeWalk.endPointLat!!, activeWalk.endPointLong!!)))
 
         val pDialog = ProgressDialog.show(context, "Loading...", "Ending your walk")
