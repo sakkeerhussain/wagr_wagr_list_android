@@ -16,11 +16,13 @@
             android:padding="6dp">
 
         <ImageView
+                android:id="@+id/mvWalk"
                 android:layout_width="match_parent"
                 android:contentDescription="@string/map_walk_description"
                 android:layout_height="160dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_map_sample"/>
+                android:src="@drawable/ic_map_sample"
+                android:transitionName="walkMap"/>
 
         <RelativeLayout
                 android:layout_width="match_parent"

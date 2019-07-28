@@ -4,6 +4,12 @@ import com.google.android.gms.maps.model.LatLng
 
 object PolyUtils {
 
+    fun append(encodedPath: String, path: List<LatLng>): String {
+        val pathExists = decode(encodedPath).toMutableList()
+        pathExists.addAll(path)
+        return encode(pathExists)
+    }
+
     fun decode(encodedPath: String): List<LatLng> {
         val len = encodedPath.length
 

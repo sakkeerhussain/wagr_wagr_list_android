@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.ImageView
+import androidx.core.app.ActivityOptionsCompat
 import com.example.walklist.R
 import com.example.walklist.controllers.BaseController
 import com.example.walklist.controllers.UserController
@@ -81,10 +81,11 @@ class MainActivity : BaseActivity(true), BaseController.Listener, WalkListFragme
         }
     }
 
-    override fun onWalkClicked(walk: Walk) {
+    override fun onWalkClicked(walk: Walk, mapView: ImageView) {
         val intent = Intent(this, WalkActivity::class.java)
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, mapView, "walkMap" )
         intent.putExtra(WalkActivity.WALK_ID, walk.id)
-        startActivity(intent)
+        startActivity(intent, options.toBundle())
     }
 
     override fun dataChanged(sender: BaseController, type: Int) {

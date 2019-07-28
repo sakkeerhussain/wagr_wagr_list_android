@@ -15,8 +15,8 @@ data class Walk(val id: Int?, val title: String, var distance: Double, var durat
                 @SerializedName("end_point_lat") var endPointLat: Double?,
                 @SerializedName("end_point_long") var endPointLong: Double?,
                 @SerializedName("resumed_at") var resumedAt: Date,
-                @SerializedName("resumed_lat") var resumedLat: Double?,
-                @SerializedName("resumed_long") var resumedLong: Double?,
+                @SerializedName("resumed_lat") var resumedLat: Double,
+                @SerializedName("resumed_long") var resumedLong: Double,
                 @SerializedName("encoded_route") var encodedRoute: String) {
 
     constructor(title: String, startPointLat: Double, startPointLong: Double) :

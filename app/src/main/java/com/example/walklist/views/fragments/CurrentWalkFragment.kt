@@ -10,11 +10,14 @@ import android.view.ViewGroup
 import com.example.walklist.R
 import com.example.walklist.controllers.BaseController
 import com.example.walklist.controllers.WalkController
+import com.example.walklist.utils.MapUtils
 import kotlinx.android.synthetic.main.fragment_current_walk.*
 import kotlinx.android.synthetic.main.fragment_current_walk.view.*
 import java.util.*
 
 class CurrentWalkFragment : Fragment(), BaseController.Listener {
+
+    var mView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +25,11 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view =  inflater.inflate(R.layout.fragment_current_walk, container, false)
+        mView =  inflater.inflate(R.layout.fragment_current_walk, container, false)
         setupViews()
-        setListeners(view)
-        WalkController.refreshActiveWalkFromRemote(view.context)
-        return view
+        setListeners(mView!!)
+        WalkController.refreshActiveWalkFromRemote(mView!!.context)
+        return mView
     }
 
     override fun onAttach(context: Context) {
@@ -41,34 +44,21 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
 
 
     private fun setupViews() {
+        val view = mView ?: return
         val walk = WalkController.mActiveWalk
 
         if (walk == null) {
-            root?.visibility = View.GONE
+            view.flRoot.visibility = View.GONE
         } else {
-            root?.visibility = View.VISIBLE
-            tvTitle?.text = walk.title
-            tvDistance?.text = "${walk.distanceKM()} KM"
-            tvDuration?.text = "${walk.duration} mins"
+            view.flRoot.visibility = View.VISIBLE
+            view.tvTitle.text = walk.title
+            view.tvDistance.text = "${walk.distanceKM()} KM"
+            view.tvDuration.text = "${walk.duration} mins"
         }
     }
 
     private fun setListeners(view: View) {
         view.btEndWalk.setOnClickListener {
-            val activeWalk = WalkController.mActiveWalk ?: return@setOnClickListener
-            // TODO - Update to the actual current point
-            val currentPointLat = 11.1111
-            val currentPointLong = 71.1111
-
-            activeWalk.endPointLat = currentPointLat
-            activeWalk.endPointLong = currentPointLong
-            activeWalk.duration += (activeWalk.resumedAt.time - Date().time) / 1000 % 60
-
-            val result = floatArrayOf()
-            Location.distanceBetween(activeWalk.startPointLat, activeWalk.startPointLong, activeWalk.endPointLat!!, activeWalk.endPointLong!!, result)
-            activeWalk.distance += result[0]
-            WalkController.mActiveWalk  = activeWalk
-
             WalkController.endCurrentWalk(it.context)
         }
     }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.walklist.R
 import com.example.walklist.controllers.WalkController
@@ -72,6 +73,6 @@ class WalkListFragment : Fragment() {
 
     interface ListInteractionListener {
         var listFragment: WalkListFragment?
-        fun onWalkClicked(walk: Walk)
+        fun onWalkClicked(walk: Walk, mapView: ImageView)
     }
 }
