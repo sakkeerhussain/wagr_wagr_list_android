@@ -7,7 +7,11 @@ import com.example.walklist.api.ApiService
 import com.example.walklist.api.BaseApiCallback
 import com.example.walklist.api.WalkRespModel
 import com.example.walklist.api.WalksRespModel
+import com.example.walklist.utils.MapUtils
+import com.example.walklist.utils.PolyUtils
 import com.example.walklist.utils.Walk
+import com.google.android.gms.maps.model.LatLng
+import java.util.*
 
 object WalkController: BaseController() {
 
@@ -80,9 +84,20 @@ object WalkController: BaseController() {
     }
 
     fun endCurrentWalk(context: Context) {
-        val walk = mActiveWalk ?: return
+        val activeWalk = mActiveWalk ?: return
+        // TODO - Update to the actual current point
+        val currentPointLat = 11.1122
+        val currentPointLong = 71.1122
+
+        activeWalk.endPointLat = currentPointLat
+        activeWalk.endPointLong = currentPointLong
+        activeWalk.endAt = Date()
+        activeWalk.duration += (activeWalk.resumedAt.time - Date().time) / 1000 % 60
+        activeWalk.distance += MapUtils.distanceBetween(activeWalk.resumedLat, activeWalk.resumedLong, activeWalk.endPointLat!!, activeWalk.endPointLong!!)
+        activeWalk.encodedRoute = PolyUtils.append(activeWalk.encodedRoute, listOf(LatLng(activeWalk.endPointLat!!, activeWalk.endPointLong!!)))
+
         val pDialog = ProgressDialog.show(context, "Loading...", "Ending your walk")
-        ApiService.getService(context).endWalk(walk.id!!, walk)
+        ApiService.getService(context).endWalk(activeWalk.id!!, activeWalk)
             .enqueue(object : BaseApiCallback<WalkRespModel>(context) {
 
                 override fun onSuccess(result: WalkRespModel) {

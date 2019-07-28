@@ -17,14 +17,6 @@ import kotlinx.android.synthetic.main.list_item_walk.view.*
 class WalkListAdapter(private val mListener: ListInteractionListener?) : RecyclerView.Adapter<WalkListAdapter.ViewHolder>() {
 
     private var mWalks: List<Walk> = listOf()
-    private val mOnClickListener: View.OnClickListener
-
-    init {
-        mOnClickListener = View.OnClickListener { v ->
-            val walk = v.tag as Walk
-            mListener?.onWalkClicked(walk)
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -54,7 +46,10 @@ class WalkListAdapter(private val mListener: ListInteractionListener?) : Recycle
 
             with(mView) {
                 tag = item
-                setOnClickListener(mOnClickListener)
+                setOnClickListener { v ->
+                    val walk = v.tag as Walk
+                    mListener?.onWalkClicked(walk, mView.mvWalk)
+                }
             }
         }
     }

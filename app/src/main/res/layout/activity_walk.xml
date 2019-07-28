@@ -32,7 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_map_sample"/>
+                android:src="@drawable/ic_map_sample"
+                android:transitionName="walkMap"/>
 
         <LinearLayout
                 android:layout_marginTop="16dp"
