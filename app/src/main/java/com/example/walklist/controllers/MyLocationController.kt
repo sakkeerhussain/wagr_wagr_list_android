@@ -2,11 +2,12 @@ package com.example.walklist.controllers
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import android.widget.Toast
 import com.example.walklist.utils.Const
 import com.example.walklist.views.activities.BaseActivity
 import com.google.android.gms.common.api.ApiException
@@ -14,14 +15,12 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 
 
-object MyLocationController {
-    val TAG: String = javaClass.simpleName
+object MyLocationController : BaseController() {
 
-    var mListener: Listener? = null
-
+    private var onFirstLocationResp: ((Location) -> Unit)? = null
     private val mLocationRequest = createLocationRequest()
     private var mLastReceivedLocation: Location? = null
-    private val mLocListener = object: LocationCallback() {
+    private val mLocListener = object : LocationCallback() {
 
         override fun onLocationResult(locationResult: LocationResult?) {
             locationResult ?: return
@@ -29,14 +28,18 @@ object MyLocationController {
             val location = locationResult.locations[0]
             if (location.hasAccuracy() && location.accuracy < 200) {
                 mLastReceivedLocation = location
+                notifyAllListeners(DATA_TYPE_DEFAULT)
+
+                onFirstLocationResp?.invoke(location)
+                onFirstLocationResp = null
             }
-            mListener?.locationUpdated(location)
         }
     }
 
-    fun startLocationChangeNotification(activity: BaseActivity): Boolean {
+    fun startLocationChangeNotification(activity: BaseActivity, onFirstLocationResp: (Location) -> Unit): Boolean {
 
-        // TODO - Check for an active walk before starting location request
+        this.onFirstLocationResp = onFirstLocationResp
+
         if (!this.hasGPSPermission(activity)) {
             requestGpsPermission(activity)
             return false
@@ -45,8 +48,8 @@ object MyLocationController {
         return this.requestLocIfProviderReady(activity)
     }
 
-    fun stopLocationChangeNotification(activity: BaseActivity) {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
+    fun stopLocationChangeNotification(context: Context) {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         fusedLocationClient.removeLocationUpdates(mLocListener)
     }
 
@@ -57,7 +60,7 @@ object MyLocationController {
         val builder = LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest)
 
         val result = LocationServices.getSettingsClient(activity)
-                .checkLocationSettings(builder.build())
+            .checkLocationSettings(builder.build())
 
         result.addOnCompleteListener(activity) { response ->
             try {
@@ -65,7 +68,7 @@ object MyLocationController {
                 val fusedLocClient = LocationServices.getFusedLocationProviderClient(activity)
                 fusedLocClient.requestLocationUpdates(createLocationRequest(), mLocListener, null)
             } catch (e: ApiException) {
-                when(e.statusCode) {
+                when (e.statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             val resolvable = e as ResolvableApiException
@@ -105,12 +108,10 @@ object MyLocationController {
     }
 
     private fun requestGpsPermission(activity: BaseActivity) {
-        ActivityCompat.requestPermissions(activity,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                Const.PERMISSION_REQUEST_CODE_GPS)
-    }
-
-    interface Listener {
-        fun locationUpdated(location: Location)
+        ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            Const.PERMISSION_REQUEST_CODE_GPS
+        )
     }
 }

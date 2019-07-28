@@ -3,8 +3,8 @@ package com.example.walklist.views.activities
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.walklist.controllers.MyLocationController
 import com.example.walklist.controllers.SharedPrefController
 import com.example.walklist.utils.Const
@@ -47,9 +47,8 @@ open class BaseActivity(val mLoginRequired: Boolean) : AppCompatActivity() {
         when (requestCode) {
             Const.PERMISSION_REQUEST_CODE_GPS -> {
 
-                if ((grantResults.isNotEmpty() && grantResults[0]
-                                == PackageManager.PERMISSION_GRANTED)) {
-                    MyLocationController.startLocationChangeNotification(this)
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    MyLocationController.startLocationChangeNotification(this) {}
                 } else {
                     Toast.makeText(this, "Unable to get your location", Toast.LENGTH_LONG).show()
                 }
@@ -63,7 +62,7 @@ open class BaseActivity(val mLoginRequired: Boolean) : AppCompatActivity() {
             Const.GPS_SETTINGS_ENABLE_REQUEST -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-                        MyLocationController.startLocationChangeNotification(this)
+                        MyLocationController.startLocationChangeNotification(this) {}
                     }
 
                     Activity.RESULT_CANCELED -> {

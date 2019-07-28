@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import com.example.walklist.R
 import com.example.walklist.controllers.BaseController
 import com.example.walklist.controllers.WalkController
+import com.example.walklist.views.activities.BaseActivity
 import kotlinx.android.synthetic.main.fragment_current_walk.view.*
 
 class CurrentWalkFragment : Fragment(), BaseController.Listener {
 
+    private var mBaseActivity: BaseActivity? = null
     var mView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,11 +32,13 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        mBaseActivity = context as BaseActivity
         WalkController.addListener(this)
     }
 
     override fun onDetach() {
         super.onDetach()
+        mBaseActivity = null
         WalkController.removeListener(this)
     }
 
@@ -55,7 +59,8 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
 
     private fun setListeners(view: View) {
         view.btEndWalk.setOnClickListener {
-            WalkController.endCurrentWalk(it.context)
+            mBaseActivity ?: return@setOnClickListener
+            WalkController.endCurrentWalk(mBaseActivity!!)
         }
     }
 

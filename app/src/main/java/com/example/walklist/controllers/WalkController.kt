@@ -10,10 +10,11 @@ import com.example.walklist.api.WalksRespModel
 import com.example.walklist.utils.MapUtils
 import com.example.walklist.utils.PolyUtils
 import com.example.walklist.utils.Walk
+import com.example.walklist.views.activities.BaseActivity
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
-object WalkController: BaseController() {
+object WalkController : BaseController() {
 
     const val DATA_TYPE_WALK_LIST = 1
     const val DATA_TYPE_ACTIVE_WALK = 2
@@ -23,6 +24,10 @@ object WalkController: BaseController() {
 
     fun isWalking(): Boolean {
         return mActiveWalk != null
+    }
+
+    fun isNotWalking(): Boolean {
+        return mActiveWalk == null
     }
 
     fun isReadyForWalking(): Boolean {
@@ -64,55 +69,77 @@ object WalkController: BaseController() {
         })
     }
 
-    fun createWalk(walk: Walk, context: Context) {
-        val pDialog = ProgressDialog.show(context, "Loading...", "Creating new walk")
-        ApiService.getService(context).createWalk(walk)
-            .enqueue(object : BaseApiCallback<WalkRespModel>(context) {
+    fun createWalk(title: String, activity: BaseActivity, success: () -> Unit) {
+        val pDialogOut = ProgressDialog.show(activity, "Waiting", "Waiting for location")
+        MyLocationController.startLocationChangeNotification(activity) { location ->
 
-                override fun onSuccess(result: WalkRespModel) {
-                    pDialog.dismiss()
-                    mActiveWalk = result.data
-                    notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
-                }
+            pDialogOut.dismiss()
+            val walk = Walk(title, location.latitude, location.longitude)
 
-                override fun onError(message: String) {
-                    pDialog.dismiss()
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                }
+            val pDialog = ProgressDialog.show(activity, "Loading...", "Creating new walk")
+            ApiService.getService(activity).createWalk(walk)
+                .enqueue(object : BaseApiCallback<WalkRespModel>(activity) {
 
-            })
+                    override fun onSuccess(result: WalkRespModel) {
+                        pDialog.dismiss()
+                        mActiveWalk = result.data
+                        notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
+                        MyLocationController.startLocationChangeNotification(activity) {
+
+                        }
+                        success.invoke()
+                    }
+
+                    override fun onError(message: String) {
+                        pDialog.dismiss()
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+        }
     }
 
-    fun endCurrentWalk(context: Context) {
+    fun endCurrentWalk(activity: BaseActivity) {
         val activeWalk = mActiveWalk ?: return
-        // TODO - Update to the actual current point
-        val currentPointLat = 11.1122
-        val currentPointLong = 71.1122
 
-        activeWalk.endPointLat = currentPointLat
-        activeWalk.endPointLong = currentPointLong
-        activeWalk.endAt = Date()
-        activeWalk.duration += ((activeWalk.resumedAt.time - Date().time) / 1000 % 60).toInt()
-        activeWalk.distance += MapUtils.distanceBetween(activeWalk.resumedLat, activeWalk.resumedLong, activeWalk.endPointLat!!, activeWalk.endPointLong!!).toInt()
-        activeWalk.encodedRoute = PolyUtils.append(activeWalk.encodedRoute, listOf(LatLng(activeWalk.endPointLat!!, activeWalk.endPointLong!!)))
+        val pDialogOut = ProgressDialog.show(activity, "Waiting", "Waiting for location")
+        MyLocationController.startLocationChangeNotification(activity) { location ->
 
-        val pDialog = ProgressDialog.show(context, "Loading...", "Ending your walk")
-        ApiService.getService(context).endWalk(activeWalk.id!!, activeWalk)
-            .enqueue(object : BaseApiCallback<WalkRespModel>(context) {
+            pDialogOut.dismiss()
+            activeWalk.endPointLat = location.latitude
+            activeWalk.endPointLong = location.longitude
+            activeWalk.endAt = Date()
+            activeWalk.duration += ((activeWalk.resumedAt.time - Date().time) / 1000 % 60).toInt()
+            activeWalk.distance += MapUtils.distanceBetween(
+                activeWalk.resumedLat,
+                activeWalk.resumedLong,
+                activeWalk.endPointLat!!,
+                activeWalk.endPointLong!!
+            ).toInt()
+            activeWalk.encodedRoute = PolyUtils.append(
+                activeWalk.encodedRoute,
+                listOf(LatLng(activeWalk.endPointLat!!, activeWalk.endPointLong!!))
+            )
 
-                override fun onSuccess(result: WalkRespModel) {
-                    pDialog.dismiss()
-                    mActiveWalk = null
-                    notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
-                    refreshWalksFromRemote(context)
-                    refreshActiveWalkFromRemote(context)
-                }
+            val pDialog = ProgressDialog.show(activity, "Loading...", "Ending your walk")
+            ApiService.getService(activity).endWalk(activeWalk.id!!, activeWalk)
+                .enqueue(object : BaseApiCallback<WalkRespModel>(activity) {
 
-                override fun onError(message: String) {
-                    pDialog.dismiss()
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                }
+                    override fun onSuccess(result: WalkRespModel) {
+                        pDialog.dismiss()
+                        mActiveWalk = null
+                        notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
+                        refreshWalksFromRemote(activity)
+                        refreshActiveWalkFromRemote(activity)
+                        MyLocationController.stopLocationChangeNotification(activity)
+                    }
 
-            })
+                    override fun onError(message: String) {
+                        pDialog.dismiss()
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+        }
     }
 }

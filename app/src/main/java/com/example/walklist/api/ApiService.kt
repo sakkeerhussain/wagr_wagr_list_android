@@ -9,7 +9,6 @@ import com.example.walklist.utils.Walk
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -60,19 +59,17 @@ object ApiService {
             loggingInterceptor.level = HttpLoggingInterceptor.Level.NONE
         }
 
-        val headerInterceptor = object: Interceptor{
-            override fun intercept(chain: Interceptor.Chain): Response {
-                val request = chain.request()
+        val headerInterceptor = Interceptor { chain ->
+            val request = chain.request()
 
-                val builder = request.newBuilder()
-                        .addHeader("Content-Type", "application/json")
-                        .addHeader("Accept", "application/json")
-                if (mTokenInService != "") {
-                    builder.addHeader("Authorization", "Bearer $mTokenInService")
-                }
-
-                return chain.proceed(builder.build())
+            val builder = request.newBuilder()
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json")
+            if (mTokenInService != "") {
+                builder.addHeader("Authorization", "Bearer $mTokenInService")
             }
+
+            chain.proceed(builder.build())
         }
 
         val httpClient = OkHttpClient.Builder()

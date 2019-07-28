@@ -12,6 +12,7 @@ import com.example.walklist.controllers.BaseController
 import com.example.walklist.controllers.UserController
 import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.Walk
+import com.example.walklist.views.dialogs.CreateWalkDialog
 import com.example.walklist.views.fragments.WalkListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -53,9 +54,8 @@ class MainActivity : BaseActivity(true), BaseController.Listener, WalkListFragme
 
     private fun setListeners() {
 
-        fab.setOnClickListener { view ->
-            val walk = Walk("Test walk", 11.1111, 71.1111)
-            WalkController.createWalk(walk, this)
+        fab.setOnClickListener {
+            CreateWalkDialog(this).show()
         }
     }
 
