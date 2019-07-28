@@ -7,7 +7,7 @@ import java.util.*
 /**
  * A walk object representing a walk created by users.
  */
-data class Walk(val id: Int?, val title: String, var distance: Int, var duration: Double,
+data class Walk(val id: Int?, val title: String, var distance: Int, var duration: Int,
                 @SerializedName("started_at") var startedAt: Date,
                 @SerializedName("start_point_lat") val startPointLat: Double,
                 @SerializedName("start_point_long") val startPointLong: Double,
@@ -20,12 +20,18 @@ data class Walk(val id: Int?, val title: String, var distance: Int, var duration
                 @SerializedName("encoded_route") var encodedRoute: String) {
 
     constructor(title: String, startPointLat: Double, startPointLong: Double) :
-            this(null, title, 0, 0.0, Date(), startPointLat, startPointLong, null, null, null,
+            this(null, title, 0, 0, Date(), startPointLat, startPointLong, null, null, null,
                 Date(), startPointLat, startPointLong, PolyUtils.encode(listOf(LatLng(startPointLat, startPointLong))))
 
     override fun toString(): String = title
-    fun description(): String = "${distance/1000} KM, $duration mins"
-    fun distanceKM(): String = String.format("%.3f", this.distance)
+    fun description(): String = "${distanceStr()} KM, $duration mins"
+    fun distanceStr(): String {
+        return if (distance > 1000) {
+            "${String.format("%0.3f", distance / 1000)} KM"
+        } else {
+            "$distance meters"
+        }
+    }
 }
 
 

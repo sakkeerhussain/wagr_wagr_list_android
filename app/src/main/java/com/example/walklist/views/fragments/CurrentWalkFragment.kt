@@ -1,19 +1,15 @@
 package com.example.walklist.views.fragments
 
 import android.content.Context
-import android.location.Location
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.walklist.R
 import com.example.walklist.controllers.BaseController
 import com.example.walklist.controllers.WalkController
-import com.example.walklist.utils.MapUtils
-import kotlinx.android.synthetic.main.fragment_current_walk.*
 import kotlinx.android.synthetic.main.fragment_current_walk.view.*
-import java.util.*
 
 class CurrentWalkFragment : Fragment(), BaseController.Listener {
 
@@ -52,7 +48,7 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
         } else {
             view.flRoot.visibility = View.VISIBLE
             view.tvTitle.text = walk.title
-            view.tvDistance.text = "${walk.distanceKM()} KM"
+            view.tvDistance.text = "${walk.distanceStr()} KM"
             view.tvDuration.text = "${walk.duration} mins"
         }
     }
