@@ -25,7 +25,7 @@ data class Walk(val id: Int?, val title: String, var distance: Int, var duration
 
     override fun toString(): String = title
 
-    fun description(): String = "${distanceStr()} KM, $duration mins"
+    fun description(): String = "${distanceStr()}, $duration mins"
 
     fun distanceStr(): String {
         return if (distance > 1000) {
