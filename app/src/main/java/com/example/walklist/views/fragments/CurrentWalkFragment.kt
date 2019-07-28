@@ -54,6 +54,13 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
             view.tvTitle.text = walk.title
             view.tvDistance.text = "${walk.distanceStr()} KM"
             view.tvDuration.text = "${walk.duration} mins"
+            if (walk.isPaused()) {
+                view.btPausWalk.text = "RESUME"
+                view.btPausWalk.setOnClickListener { WalkController.resumeCurrentWalk(mBaseActivity!!) }
+            } else {
+                view.btPausWalk.text = "PAUSE"
+                view.btPausWalk.setOnClickListener { WalkController.pauseCurrentWalk(mBaseActivity!!) }
+            }
         }
     }
 

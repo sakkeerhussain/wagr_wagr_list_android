@@ -109,17 +109,20 @@ object WalkController : BaseController() {
             activeWalk.endPointLat = location.latitude
             activeWalk.endPointLong = location.longitude
             activeWalk.endAt = Date()
-            activeWalk.duration += ((activeWalk.resumedAt.time - Date().time) / 1000 % 60).toInt()
-            activeWalk.distance += MapUtils.distanceBetween(
-                activeWalk.resumedLat,
-                activeWalk.resumedLong,
-                activeWalk.endPointLat!!,
-                activeWalk.endPointLong!!
-            ).toInt()
-            activeWalk.encodedRoute = PolyUtils.append(
-                activeWalk.encodedRoute,
-                listOf(LatLng(activeWalk.endPointLat!!, activeWalk.endPointLong!!))
-            )
+
+            if (!activeWalk.isPaused()) {
+                activeWalk.duration += ((Date().time - activeWalk.resumedAt!!.time) / 1000 % 60).toInt()
+                activeWalk.distance += MapUtils.distanceBetween(
+                    activeWalk.resumedLat!!,
+                    activeWalk.resumedLong!!,
+                    activeWalk.endPointLat!!,
+                    activeWalk.endPointLong!!
+                ).toInt()
+                activeWalk.encodedRoute = PolyUtils.append(
+                    activeWalk.encodedRoute,
+                    listOf(LatLng(activeWalk.endPointLat!!, activeWalk.endPointLong!!))
+                )
+            }
 
             val pDialog = ProgressDialog.show(activity, "Loading...", "Ending your walk")
             ApiService.getService(activity).endWalk(activeWalk.id!!, activeWalk)
@@ -132,6 +135,79 @@ object WalkController : BaseController() {
                         refreshWalksFromRemote(activity)
                         refreshActiveWalkFromRemote(activity)
                         MyLocationController.stopLocationChangeNotification(activity)
+                    }
+
+                    override fun onError(message: String) {
+                        pDialog.dismiss()
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+        }
+    }
+
+    fun pauseCurrentWalk(activity: BaseActivity) {
+        val activeWalk = mActiveWalk ?: return
+
+        val pDialogOut = ProgressDialog.show(activity, "Waiting", "Waiting for location")
+        MyLocationController.startLocationChangeNotification(activity) { location ->
+
+            pDialogOut.dismiss()
+            activeWalk.duration += ((Date().time - activeWalk.resumedAt!!.time) / 1000 % 60).toInt()
+            activeWalk.distance += MapUtils.distanceBetween(
+                activeWalk.resumedLat!!,
+                activeWalk.resumedLong!!,
+                location.latitude,
+                location.longitude
+            ).toInt()
+            activeWalk.encodedRoute = PolyUtils.append(
+                activeWalk.encodedRoute,
+                listOf(LatLng(location.latitude, location.longitude))
+            )
+            activeWalk.resumedAt = null
+            activeWalk.resumedLat = null
+            activeWalk.resumedLong = null
+
+            val pDialog = ProgressDialog.show(activity, "Loading...", "Updating walk details in remote")
+            ApiService.getService(activity).updateWalk(activeWalk.id!!, activeWalk)
+                .enqueue(object : BaseApiCallback<WalkRespModel>(activity) {
+
+                    override fun onSuccess(result: WalkRespModel) {
+                        pDialog.dismiss()
+                        MyLocationController.stopLocationChangeNotification(activity)
+                    }
+
+                    override fun onError(message: String) {
+                        pDialog.dismiss()
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+        }
+    }
+
+    fun resumeCurrentWalk(activity: BaseActivity) {
+        val activeWalk = mActiveWalk ?: return
+
+        val pDialogOut = ProgressDialog.show(activity, "Waiting", "Waiting for location")
+        MyLocationController.startLocationChangeNotification(activity) { location ->
+
+            pDialogOut.dismiss()
+            activeWalk.resumedAt = Date()
+            activeWalk.resumedLat = location.latitude
+            activeWalk.resumedLong = location.longitude
+            activeWalk.encodedRoute = PolyUtils.append(
+                activeWalk.encodedRoute,
+                listOf(LatLng(location.latitude, location.longitude))
+            )
+
+            val pDialog = ProgressDialog.show(activity, "Loading...", "Updating walk details in remote")
+            ApiService.getService(activity).updateWalk(activeWalk.id!!, activeWalk)
+                .enqueue(object : BaseApiCallback<WalkRespModel>(activity) {
+
+                    override fun onSuccess(result: WalkRespModel) {
+                        pDialog.dismiss()
+                        MyLocationController.startLocationChangeNotification(activity) {}
                     }
 
                     override fun onError(message: String) {
