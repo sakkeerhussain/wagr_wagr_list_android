@@ -237,4 +237,8 @@ object WalkController : BaseController(), BaseController.Listener {
             }
         }
     }
+
+    fun getWalk(walkId: Int): Walk? {
+        return mWalks.firstOrNull { it.id == walkId }
+    }
 }

@@ -25,14 +25,18 @@ data class Walk(val id: Int?, val title: String, var distance: Int, var duration
 
     override fun toString(): String = title
 
-    fun description(): String = "${distanceStr()}, $duration mins"
+    fun description(): String = "${distanceStr()}, ${durationStr()}"
 
     fun distanceStr(): String {
         return if (distance > 1000) {
-            "${String.format("%0.3f", distance / 1000)} KM"
+            "${distance / 1000} KMs and ${distance - ((distance / 1000) * 1000)} meters"
         } else {
             "$distance meters"
         }
+    }
+
+    fun durationStr(): String {
+        return "$duration mins"
     }
 
     fun isPaused(): Boolean {
