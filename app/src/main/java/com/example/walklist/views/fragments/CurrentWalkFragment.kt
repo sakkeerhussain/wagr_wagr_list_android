@@ -78,7 +78,7 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
 
     override fun onStop() {
         super.onStop()
-        WalkController.pauseCurrentWalk(mBaseActivity!!)
+        // WalkController.pauseCurrentWalk(mBaseActivity!!)
         mView?.mapView?.onStop()
     }
 
