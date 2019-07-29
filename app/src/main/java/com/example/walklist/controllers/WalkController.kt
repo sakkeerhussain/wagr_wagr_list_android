@@ -233,11 +233,11 @@ object WalkController : BaseController(), BaseController.Listener {
                 val location = MyLocationController.getLastLocation() ?: return
 
                 val latLng = LatLng(location.latitude, location.longitude)
+                activeWalk.lastPoint = latLng
                 activeWalk.encodedRoute = PolyUtils.append(
                     activeWalk.encodedRoute,
                     listOf(latLng)
                 )
-                activeWalk.lastPoint = latLng
                 notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
             }
         }
