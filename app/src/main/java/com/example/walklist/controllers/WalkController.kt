@@ -13,6 +13,7 @@ import com.example.walklist.utils.Walk
 import com.example.walklist.views.activities.BaseActivity
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
+import kotlin.math.ceil
 
 object WalkController : BaseController(), BaseController.Listener {
 
@@ -110,7 +111,7 @@ object WalkController : BaseController(), BaseController.Listener {
             activeWalk.endAt = Date()
 
             if (!activeWalk.isPaused()) {
-                activeWalk.duration += ((Date().time - activeWalk.resumedAt!!.time) / 1000 % 60).toInt()
+                activeWalk.duration += ceil((Date().time - activeWalk.resumedAt!!.time) / 1000 / 60.0).toInt()
                 activeWalk.distance += MapUtils.distanceBetween(
                     activeWalk.resumedLat!!,
                     activeWalk.resumedLong!!,
@@ -154,7 +155,7 @@ object WalkController : BaseController(), BaseController.Listener {
         MyLocationController.startLocationChangeNotification(activity) { location ->
 
             pDialogOut.dismiss()
-            activeWalk.duration += ((Date().time - activeWalk.resumedAt!!.time) / 1000 % 60).toInt()
+            activeWalk.duration += ceil((Date().time - activeWalk.resumedAt!!.time) / 1000 / 60.0).toInt()
             activeWalk.distance += MapUtils.distanceBetween(
                 activeWalk.resumedLat!!,
                 activeWalk.resumedLong!!,
@@ -171,6 +172,7 @@ object WalkController : BaseController(), BaseController.Listener {
 
             MyLocationController.removeListener(this)
             MyLocationController.stopLocationChangeNotification(activity)
+            notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
 
             val pDialog = ProgressDialog.show(activity, "Loading...", "Updating walk details in remote")
             ApiService.getService(activity).updateWalk(activeWalk.id!!, activeWalk)
@@ -205,6 +207,7 @@ object WalkController : BaseController(), BaseController.Listener {
             )
             MyLocationController.addListener(this)
             MyLocationController.startLocationChangeNotification(activity) {}
+            notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
 
             val pDialog = ProgressDialog.show(activity, "Loading...", "Updating walk details in remote")
             ApiService.getService(activity).updateWalk(activeWalk.id!!, activeWalk)
@@ -225,14 +228,16 @@ object WalkController : BaseController(), BaseController.Listener {
 
     override fun dataChanged(sender: BaseController, type: Int) {
         if (sender is MyLocationController) {
-            if (sender.isOfType(type, BaseController.DATA_TYPE_DEFAULT)) {
+            if (sender.isOfType(type, DATA_TYPE_DEFAULT)) {
                 val activeWalk = mActiveWalk ?: return
                 val location = MyLocationController.getLastLocation() ?: return
 
+                val latLng = LatLng(location.latitude, location.longitude)
                 activeWalk.encodedRoute = PolyUtils.append(
                     activeWalk.encodedRoute,
-                    listOf(LatLng(location.latitude, location.longitude))
+                    listOf(latLng)
                 )
+                activeWalk.lastPoint = latLng
                 notifyAllListeners(DATA_TYPE_ACTIVE_WALK)
             }
         }

@@ -19,6 +19,8 @@ data class Walk(val id: Int?, val title: String, var distance: Int, var duration
                 @SerializedName("resumed_long") var resumedLong: Double?,
                 @SerializedName("encoded_route") var encodedRoute: String) {
 
+    var lastPoint: LatLng? = null
+
     constructor(title: String, startPointLat: Double, startPointLong: Double) :
             this(null, title, 0, 0, Date(), startPointLat, startPointLong, null, null, null,
                 Date(), startPointLat, startPointLong, PolyUtils.encode(listOf(LatLng(startPointLat, startPointLong))))

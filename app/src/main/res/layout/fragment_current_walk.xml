@@ -1,117 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/flRoot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:elevation="10dp"
-        android:visibility="gone"
-        tools:context=".views.fragments.CurrentWalkFragment"
-        tools:visibility="visible">
-
-        <LinearLayout
+            android:id="@+id/flRoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:elevation="10dp"
+            android:visibility="gone"
+            tools:context=".views.fragments.CurrentWalkFragment"
+            tools:visibility="visible">
 
-            <RelativeLayout
+        <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_margin="10dp"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@+id/mapView"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
+                <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        tools:text="Evening Walk" />
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/tvTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="Evening Walk"/>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Distance:"
-                            android:textSize="16sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Distance:"
+                                android:textSize="16sp"/>
 
                         <TextView
-                            android:id="@+id/tvDistance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="3dp"
-                            android:textSize="16sp"
-                            tools:text="4 KM" />
+                                android:id="@+id/tvDistance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="3dp"
+                                android:textSize="16sp"
+                                tools:text="4 KM"/>
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Time Elapsed:"
-                            android:textSize="16sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Time Elapsed:"
+                                android:textSize="16sp"/>
 
                         <TextView
-                            android:id="@+id/tvDuration"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="3dp"
-                            android:textSize="16sp"
-                            tools:text="50 mins" />
+                                android:id="@+id/tvDuration"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="3dp"
+                                android:textSize="16sp"
+                                tools:text="50 mins"/>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/mapView"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_alignParentEnd="true"
-                    android:contentDescription="@string/map_walk_description"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_map_sample" />
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-            </RelativeLayout>
+                    <Button
+                            android:id="@+id/btPausWalk"
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PAUSE"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                    <Button
+                            android:id="@+id/btEndWalk"
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="END WALK"/>
 
-                <Button
-                    android:id="@+id/btPausWalk"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PAUSE" />
-
-                <Button
-                    android:id="@+id/btEndWalk"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="END WALK" />
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+            <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 
