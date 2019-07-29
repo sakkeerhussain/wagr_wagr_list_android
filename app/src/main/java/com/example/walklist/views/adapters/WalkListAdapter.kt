@@ -1,13 +1,16 @@
 package com.example.walklist.views.adapters
 
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.walklist.R
+import com.example.walklist.utils.MapUtils
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.fragments.WalkListFragment.ListInteractionListener
+import com.google.android.gms.maps.GoogleMap
 import kotlinx.android.synthetic.main.list_item_walk.view.*
 
 /**
@@ -39,13 +42,25 @@ class WalkListAdapter(private val mListener: ListInteractionListener?) : Recycle
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
 
+        private var mMap: GoogleMap? = null
+
         fun bind(position: Int) {
-            val item = mWalks[position]
-            this.mView.tvTitle.text = item.title
-            this.mView.description.text = item.description()
+            val walk = mWalks[position]
+            this.mView.tvTitle.text = walk.title
+            this.mView.description.text = walk.description()
+
+            this.mView.mvWalk.onCreate(null)
+            this.mView.mvWalk.onResume()
+            this.mView.mvWalk.getMapAsync {
+                this.mMap = it
+                MapUtils.updateMapCamera(it, walk.startPointLat, walk.startPointLong)
+                MapUtils.drawRouteLine(it, walk.encodedRoute, Color.BLUE)
+                MapUtils.createMarker(it, walk.startPointLat, walk.startPointLong, "Start")
+                MapUtils.createMarker(it, walk.endPointLat!!, walk.endPointLong!!, "End")
+            }
 
             with(mView) {
-                tag = item
+                tag = walk
                 setOnClickListener { v ->
                     val walk = v.tag as Walk
                     mListener?.onWalkClicked(walk, mView.mvWalk)

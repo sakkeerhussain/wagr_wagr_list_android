@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import com.example.walklist.R
 import com.example.walklist.controllers.BaseController
@@ -14,11 +13,13 @@ import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.dialogs.CreateWalkDialog
 import com.example.walklist.views.fragments.WalkListFragment
+import com.google.android.gms.maps.MapView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(true), BaseController.Listener, WalkListFragment.ListInteractionListener {
 
     override var listFragment: WalkListFragment? = null
+    // var createFragment: WalkListFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +82,7 @@ class MainActivity : BaseActivity(true), BaseController.Listener, WalkListFragme
         }
     }
 
-    override fun onWalkClicked(walk: Walk, mapView: ImageView) {
+    override fun onWalkClicked(walk: Walk, mapView: MapView) {
         val intent = Intent(this, WalkActivity::class.java)
         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, mapView, "walkMap" )
         intent.putExtra(WalkActivity.WALK_ID, walk.id)
