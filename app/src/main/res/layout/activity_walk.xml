@@ -28,11 +28,10 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ImageView
+        <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_map_sample"
                 android:transitionName="walkMap"/>
 
         <LinearLayout
@@ -55,10 +54,11 @@
                         android:text="Distance"/>
 
                 <TextView
+                        android:id="@+id/tvDistance"
                         android:textSize="25sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="52 KM"/>
+                        tools:text="52 KM"/>
 
             </LinearLayout>
 
@@ -73,19 +73,29 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Distance"/>
+                        android:text="Duration"/>
 
                 <TextView
+                        android:id="@+id/tvDuration"
                         android:textSize="25sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="52 KM"/>
+                        tools:text="52 mins"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
-
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_my_location"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
