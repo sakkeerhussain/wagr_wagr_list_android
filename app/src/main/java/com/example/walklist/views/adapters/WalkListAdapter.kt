@@ -49,6 +49,8 @@ class WalkListAdapter(private val mListener: ListInteractionListener?) : Recycle
             this.mView.tvTitle.text = walk.title
             this.mView.description.text = walk.description()
 
+            // It's not a good practice to add map in recycler view.
+            // Consider updating the UX in the future to avoid map from list.
             this.mView.mvWalk.onCreate(null)
             this.mView.mvWalk.onResume()
             this.mView.mvWalk.getMapAsync {
