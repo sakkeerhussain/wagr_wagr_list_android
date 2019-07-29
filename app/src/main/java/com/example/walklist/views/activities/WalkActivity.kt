@@ -4,11 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import com.example.walklist.R
 import com.example.walklist.controllers.WalkController
-import com.example.walklist.utils.PolyUtils
+import com.example.walklist.utils.MapUtils
 import com.example.walklist.utils.Walk
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.Polyline
 import kotlinx.android.synthetic.main.activity_walk.*
 
 
@@ -95,20 +95,6 @@ class WalkActivity : BaseActivity(true) {
         return false
     }
 
-    private fun updateMapCamera(latitude: Double, longitude: Double) {
-        val latLong = LatLng(latitude, longitude)
-        val cameraPosition = CameraPosition.Builder()
-            .target(latLong)
-            .zoom(17f)
-            .bearing(0f)
-            .tilt(0f)   // Sets the tilt of the camera to 30 degrees
-            .build()
-
-        if (mAutoUpdateMapCamera) {
-            mMap?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-        }
-    }
-
     private fun setupMapActionListeners() {
         mMap?.setOnCameraMoveStartedListener {
             if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
@@ -122,26 +108,17 @@ class WalkActivity : BaseActivity(true) {
         }
     }
 
-    private fun drawRouteLine(line: String?, color: Int): Polyline? {
-        line ?: return null
-        val points = PolyUtils.decode(line)
-        val polyLineOptions = PolylineOptions()
-        for (latLong in points) {
-            polyLineOptions.add(latLong)
+    private fun updateMapCamera(latitude: Double, longitude: Double) {
+        if (mAutoUpdateMapCamera) {
+            MapUtils.updateMapCamera(mMap, latitude, longitude)
         }
-        polyLineOptions.width(25f)
-        polyLineOptions.color(color)
-        polyLineOptions.geodesic(true)
-        return mMap?.addPolyline(polyLineOptions)
+    }
+
+    private fun drawRouteLine(line: String?, color: Int): Polyline? {
+        return MapUtils.drawRouteLine(mMap, line, color)
     }
 
     private fun createMarker(lat: Double, long: Double, title: String): Marker? {
-        return mMap?.addMarker(
-            MarkerOptions()
-                .position(LatLng(lat, long))
-                .flat(true)
-                .rotation(0f)
-                .title(title)
-        )
+        return MapUtils.createMarker(mMap, lat, long, title)
     }
 }

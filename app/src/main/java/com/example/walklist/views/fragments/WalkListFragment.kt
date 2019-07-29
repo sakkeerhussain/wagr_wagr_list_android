@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.walklist.R
 import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.Walk
 import com.example.walklist.views.adapters.WalkListAdapter
+import com.google.android.gms.maps.MapView
 import kotlinx.android.synthetic.main.fragment_walk_list.view.*
 
 class WalkListFragment : Fragment() {
@@ -73,6 +73,6 @@ class WalkListFragment : Fragment() {
 
     interface ListInteractionListener {
         var listFragment: WalkListFragment?
-        fun onWalkClicked(walk: Walk, mapView: ImageView)
+        fun onWalkClicked(walk: Walk, mapView: MapView)
     }
 }
