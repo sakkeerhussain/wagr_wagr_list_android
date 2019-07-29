@@ -45,6 +45,15 @@ object MapUtils {
         return map?.addPolyline(polyLineOptions)
     }
 
+    fun createOrUpdateMarker(marker: Marker?, map: GoogleMap?, lat: Double, long: Double, title: String): Marker? {
+        return if (marker == null) {
+            createMarker(map, lat, long, "Start")
+        } else {
+            marker.position = LatLng(lat, long)
+            marker
+        }
+    }
+
     fun createMarker(map: GoogleMap?, lat: Double, long: Double, title: String): Marker? {
         return map?.addMarker(
             MarkerOptions()

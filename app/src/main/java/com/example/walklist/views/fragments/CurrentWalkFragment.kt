@@ -11,6 +11,7 @@ import com.example.walklist.R
 import com.example.walklist.controllers.BaseController
 import com.example.walklist.controllers.WalkController
 import com.example.walklist.utils.MapUtils
+import com.example.walklist.utils.Walk
 import com.example.walklist.views.activities.BaseActivity
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
@@ -23,6 +24,7 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
 
     private var mWalkRoute: Polyline? = null
     private var mLocationMarker: Marker? = null
+    private var mStartMarker: Marker? = null
     private var mMap: GoogleMap? = null
     private var mBaseActivity: BaseActivity? = null
     var mView: View? = null
@@ -33,7 +35,7 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView =  inflater.inflate(R.layout.fragment_current_walk, container, false)
+        mView = inflater.inflate(R.layout.fragment_current_walk, container, false)
         setupViews()
         setListeners(mView!!)
         WalkController.refreshActiveWalkFromRemote(mView!!.context)
@@ -42,11 +44,6 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
         mView!!.mapView.onCreate(savedInstanceState)
         mView!!.mapView.getMapAsync {
             this.mMap = it
-            val walk = WalkController.mActiveWalk ?: return@getMapAsync
-            MapUtils.updateMapCamera(it, walk.startPointLat, walk.startPointLong)
-            MapUtils.createMarker(it, walk.startPointLat, walk.startPointLong, "Start")
-            mWalkRoute = MapUtils.drawRouteLine(it, walk.encodedRoute, Color.BLUE)
-            mLocationMarker = MapUtils.createMarker(it, walk.endPointLat!!, walk.endPointLong!!, "Current")
         }
 
         return mView
@@ -81,6 +78,7 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
 
     override fun onStop() {
         super.onStop()
+        WalkController.pauseCurrentWalk(mBaseActivity!!)
         mView?.mapView?.onStop()
     }
 
@@ -118,10 +116,31 @@ class CurrentWalkFragment : Fragment(), BaseController.Listener {
                 view.btPausWalk.setOnClickListener { WalkController.pauseCurrentWalk(mBaseActivity!!) }
             }
 
+            updateGoogleMapView(walk)
+        }
+    }
 
-            this.mWalkRoute?.remove()
-            this.mWalkRoute = MapUtils.drawRouteLine(mMap, walk.encodedRoute, Color.BLUE)
-            this.mLocationMarker?.position = walk.lastPoint
+    private fun updateGoogleMapView(walk: Walk) {
+        val map = mMap ?: return
+
+        this.mWalkRoute?.remove()
+        this.mWalkRoute = MapUtils.drawRouteLine(map, walk.encodedRoute, Color.BLUE)
+
+        mStartMarker = MapUtils.createOrUpdateMarker(
+            mStartMarker, map, walk.startPointLat, walk.startPointLong, "Start"
+        )
+
+        if (walk.lastPoint != null) {
+            mLocationMarker = MapUtils.createOrUpdateMarker(
+                mLocationMarker, map, walk.lastPoint!!.latitude, walk.lastPoint!!.longitude, "Current"
+            )
+            MapUtils.updateMapCamera(map, walk.lastPoint!!.latitude, walk.lastPoint!!.longitude)
+
+        } else if (walk.resumedLat != null) {
+            MapUtils.updateMapCamera(this.mMap, walk.resumedLat!!, walk.resumedLong!!)
+
+        } else {
+            MapUtils.updateMapCamera(this.mMap, walk.startPointLat, walk.startPointLong)
         }
     }
 

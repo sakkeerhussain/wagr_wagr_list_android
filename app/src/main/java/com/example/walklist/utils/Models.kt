@@ -31,7 +31,7 @@ data class Walk(val id: Int?, val title: String, var distance: Int, var duration
 
     fun distanceStr(): String {
         return if (distance > 1000) {
-            "${distance / 1000} KMs and ${distance - ((distance / 1000) * 1000)} meters"
+            "${String.format("%.3f", distance / 1000.0)} KMs"
         } else {
             "$distance meters"
         }
